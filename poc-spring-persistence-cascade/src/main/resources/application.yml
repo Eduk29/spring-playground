@@ -1,0 +1,81 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+    session:
+      timeout: 10
+  error:
+    include-exception: false
+    include-stacktrace: never
+    whitelabel:
+      enabled: true
+
+management:
+  security:
+    enabled: false
+  endpoints:
+    web:
+      base-path: /mpi/v2
+      exposure:
+        include:
+        - info
+        - health
+        - asynchronousProcess
+        - file
+      path-mapping:
+        asynchronousProcess: asynchronous-process
+        file: files
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+    
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimumIdle: 5
+      maximumPoolSize: 20
+      idleTimeout: 10000
+      connectionTimeout: 250
+      maxLifetime: 600000
+    url: jdbc:mariadb://localhost:3306/DEV_POC_SPRING_CASCADE_DATABASE
+    driverClassName: org.mariadb.jdbc.Driver
+    sqlScriptEncoding: UTF-8
+    username: root
+    password: pitico
+    
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    properties:
+      javax.persistence.schema-generation.create-source: metadata
+      javax.persistence.schema-generation.scripts.action: none
+      javax.persistence.schema-generation.scripts.create-target: create.sql
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+      hibernate.integration.envers.enabled: false
+      hibernate.show_sql: true
+      hibernate.format_sql: true
+      hibernate.use_sql_comments: true
+
+
+  liquibase:
+    enabled: true
+   
+logging:
+  level:
+    org.hibernate.type.descriptor.sql.BasicBinder: debug
+    org.hibernate.SQL: info
+    org.hibernate.type: WARN
+    org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod: debug
+    .: error
+  pattern:
+    console: '%clr(%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n)'
