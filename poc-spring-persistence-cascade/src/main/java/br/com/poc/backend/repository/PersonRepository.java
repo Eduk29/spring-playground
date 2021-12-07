@@ -14,6 +14,5 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 	Boolean existsById(Integer id);
 	Person findById(Integer id);
 	Person findByName(String name);
-	<S extends Person> S save(Person person);
 	void deleteById(Integer id);
 }

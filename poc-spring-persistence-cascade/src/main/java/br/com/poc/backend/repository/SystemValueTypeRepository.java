@@ -13,6 +13,5 @@ public interface SystemValueTypeRepository extends CrudRepository<SystemValueTyp
 	List<SystemValueType> findAll();
 	SystemValueType findById(Integer id);
 	SystemValueType findByCode(String code);
-	<S extends SystemValueType> S save(SystemValueType systemValue);
 	void deleteById(Integer id);
 }
