@@ -15,9 +15,9 @@ import br.com.poc.backend.repository.SystemValueRepository;
 public class SystemValueService {
 
 	@Autowired
-	SystemValueRepository systemValueRepository;
+	private SystemValueRepository systemValueRepository;
 	
-	public List<SystemValue> findAll() {
+	public List<SystemValue> listAll() {
 		return this.systemValueRepository.findAll();
 	}
 	
@@ -27,5 +27,18 @@ public class SystemValueService {
 	
 	public SystemValue findByCode(String code) {
 		return this.systemValueRepository.findByCode(code);
+	}
+	
+	public SystemValue save (SystemValue systemValue) {
+		return this.systemValueRepository.save(systemValue);
+	}
+	
+	public SystemValue update (SystemValue systemValue, Integer id) {
+		systemValue.setId(id);
+		return this.systemValueRepository.save(systemValue);
+	}
+	
+	public void remove (Integer id) {
+		this.systemValueRepository.deleteById(id);
 	}
 }
