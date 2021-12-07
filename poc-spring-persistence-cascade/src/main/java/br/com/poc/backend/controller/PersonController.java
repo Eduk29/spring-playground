@@ -38,16 +38,19 @@ public class PersonController {
 	}
 	
 	@PostMapping(path = "/new", consumes = "application/json")
+	@ApiOperation(value = "Create a new person.")
 	public Person save(@RequestBody Person person) {
 		return this.personService.save(person);
 	}
 	
-	@PutMapping(path = "/{id}/update") 
+	@PutMapping(path = "/{id}/update")
+	@ApiOperation(value = "Update a specific person.")
 	public Person update(@RequestBody Person person, @PathVariable("id") Integer id) {
 		return this.personService.update(person, id);
 	}
 	
 	@DeleteMapping("/{id}/remove")
+	@ApiOperation(value = "Remove a specific person.")
 	public void remove(@PathVariable("id") Integer id) {
 		personService.remove(id);
 	}

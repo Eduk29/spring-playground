@@ -9,8 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -20,37 +18,24 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-@Table(name = "POC_SPRING_CASCADE_SYSTEM_VALUE")
-public class SystemValue {
+@Table(name = "POC_SPRING_CASCADE_SYSTEM_VALUE_TYPE")
+public class SystemValueType {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_SYSTEM_VALUE", nullable = false, precision = 8, scale = 0)
+	@Column(name = "ID_SYSTEM_VALUE_TYPE", nullable = false, precision = 8, scale = 0)
 	private Integer id;
 	
-	@Column(name = "DESCRIPTION_SYSTEM_VALUE", nullable = false, length = 255)
+	@Column(name = "DESCRIPTION_SYSTEM_VALUE_TYPE", nullable = false, length = 255)
 	private String description;
 
-	@Column(name = "CODE_SYSTEM_VALUE", nullable = false, length = 255)
+	@Column(name = "CODE_SYSTEM_VALUE_TYPE", nullable = false, length = 255)
 	private String code;
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "type")
 	@JsonInclude(Include.NON_NULL)
 	@JsonIgnoreProperties(value = "type", allowSetters = true)
-	private List<Contact> contacts;
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "ID_SYSTEM_VALUE_TYPE")
-	@JsonIgnoreProperties(value = "systemValues", allowSetters = true)
-	private SystemValueType type;
-
-	public SystemValueType getType() {
-		return type;
-	}
-
-	public void setType(SystemValueType type) {
-		this.type = type;
-	}
+	private List<SystemValue> systemValues;
 
 	public String getDescription() {
 		return description;
@@ -68,12 +53,12 @@ public class SystemValue {
 		this.code = code;
 	}
 
-	public List<Contact> getContacts() {
-		return contacts;
+	public List<SystemValue> getSystemValues() {
+		return systemValues;
 	}
 
-	public void setContacts(List<Contact> contacts) {
-		this.contacts = contacts;
+	public void setSystemValues(List<SystemValue> systemValues) {
+		this.systemValues = systemValues;
 	}
 
 	public Integer getId() {
