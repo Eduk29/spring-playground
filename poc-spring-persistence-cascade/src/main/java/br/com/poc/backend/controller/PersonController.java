@@ -49,7 +49,7 @@ public class PersonController {
 	
 	@DeleteMapping("/{id}/remove")
 	public void remove(@PathVariable("id") Integer id) {
-		personService.removeById(id);
+		personService.remove(id);
 	}
 	
 }

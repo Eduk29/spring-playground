@@ -9,7 +9,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -31,9 +33,11 @@ public class Contact {
 	@JsonInclude(Include.NON_NULL)
 	private List<Person> persons;
 	
-	@Column(name = "TYPE_CONTACT", nullable = true, length = 255)
-	private String type;
-	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "ID_TYPE_CONTACT")
+	@JsonIgnoreProperties(value = "contacts", allowSetters = true)
+	private SystemValue type;
+
 	@Column(name = "CONTACT_CONTACT", nullable = true, length = 255)
 	private String contact;
 
@@ -43,14 +47,6 @@ public class Contact {
 
 	public void setPersons(List<Person> persons) {
 		this.persons = persons;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public String getContact() {
@@ -63,5 +59,13 @@ public class Contact {
 
 	public Integer getId() {
 		return id;
+	}
+
+	public SystemValue getType() {
+		return type;
+	}
+
+	public void setType(SystemValue type) {
+		this.type = type;
 	}
 }
