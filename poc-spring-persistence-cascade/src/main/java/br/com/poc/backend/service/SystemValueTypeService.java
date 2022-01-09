@@ -21,7 +21,7 @@ public class SystemValueTypeService {
 	
 	public List<SystemValueType> listAll() {
 		List<SystemValueType> systemValueTypeList = this.systemValueTypeRepository.findAll();
-		this.prepareSystemValueTypeForRemoveContacts(systemValueTypeList);
+//		this.prepareSystemValueTypeForRemoveContacts(systemValueTypeList);
 		return systemValueTypeList;
 	}
 	
@@ -29,7 +29,7 @@ public class SystemValueTypeService {
 		SystemValueType systemValueType = this.systemValueTypeRepository.findById(id);
 		List<SystemValueType> systemValueTypeList = new ArrayList<>();
 		systemValueTypeList.add(systemValueType);
-		this.prepareSystemValueTypeForRemoveContacts(systemValueTypeList);
+//		this.prepareSystemValueTypeForRemoveContacts(systemValueTypeList);
 		return systemValueTypeList.get(0);
 	}
 	
@@ -48,18 +48,5 @@ public class SystemValueTypeService {
 	
 	public void remove (Integer id) {
 		this.systemValueTypeRepository.deleteById(id);
-	}
-	
-	private void prepareSystemValueTypeForRemoveContacts(List<SystemValueType> systemValueTypeList) {
-		for (int counter = 0; counter < systemValueTypeList.size(); counter++) {
-			List<SystemValue> systemValueList = systemValueTypeList.get(counter).getSystemValues();
-			this.removeContactsFromSystemValue(systemValueList);
-		}
-	}
-	
-	private void removeContactsFromSystemValue(List<SystemValue> systemValueList) {
-		for(int counter = 0; counter < systemValueList.size(); counter++) {
-			systemValueList.get(counter).setContacts(null);
-		}
 	}
 }

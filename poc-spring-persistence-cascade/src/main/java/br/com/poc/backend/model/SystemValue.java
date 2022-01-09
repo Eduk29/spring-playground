@@ -34,11 +34,6 @@ public class SystemValue {
 	@Column(name = "CODE_SYSTEM_VALUE", nullable = false, length = 255)
 	private String code;
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "type")
-	@JsonInclude(Include.NON_NULL)
-	@JsonIgnoreProperties(value = "type", allowSetters = true)
-	private List<Contact> contacts;
-	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "ID_SYSTEM_VALUE_TYPE")
 	@JsonIgnoreProperties(value = "systemValues", allowSetters = true)
@@ -66,14 +61,6 @@ public class SystemValue {
 
 	public void setCode(String code) {
 		this.code = code;
-	}
-
-	public List<Contact> getContacts() {
-		return contacts;
-	}
-
-	public void setContacts(List<Contact> contacts) {
-		this.contacts = contacts;
 	}
 
 	public Integer getId() {
