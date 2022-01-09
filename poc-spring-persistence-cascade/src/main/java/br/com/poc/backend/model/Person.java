@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -32,6 +33,10 @@ public class Person {
 				joinColumns = { @JoinColumn(name = "ID_PERSON") },
 				inverseJoinColumns = { @JoinColumn(name = "ID_CONTACT") })
 	private List<Contact> contacts;
+	
+	@OneToOne(mappedBy = "person")
+	@JsonIgnoreProperties(value = "person", allowSetters = true)
+	private User user;
 	
 	@Column(name = "NAME_PERSON", nullable = true, length = 255)
 	private String name;
@@ -91,5 +96,13 @@ public class Person {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }
