@@ -8,6 +8,8 @@ This repository is for study, tests and experiments applications using [Spring B
 
 This repository use some patterns like [Semantic Commit Messages](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716) and [Git flow](https://nvie.com/posts/a-successful-git-branching-model/).
 
+PS: If you use Postman, feel free to import the collection of calls from this repository
+
 ## Developer :computer:
 
 José Eduardo Trindade E Marques  
