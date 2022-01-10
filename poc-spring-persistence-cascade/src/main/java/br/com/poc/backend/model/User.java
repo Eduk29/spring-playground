@@ -23,7 +23,7 @@ public class User {
 	@Column(name = "ID_USER", nullable = false, precision = 9, scale = 0)
 	private Integer id;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "ID_PERSON", referencedColumnName = "ID_PERSON")
 	@JsonIgnoreProperties(value = "user", allowSetters = true)
 	private Person person;

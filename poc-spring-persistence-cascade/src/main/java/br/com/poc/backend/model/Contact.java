@@ -29,7 +29,7 @@ public class Contact {
 	private Integer id;
 	
 	@JsonIgnoreProperties(value = "contacts", allowSetters = true)
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "contacts")
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REFRESH }, mappedBy = "contacts")
 	@JsonInclude(Include.NON_NULL)
 	private List<Person> persons;
 	

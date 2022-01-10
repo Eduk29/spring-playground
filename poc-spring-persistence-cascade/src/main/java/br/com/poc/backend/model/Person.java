@@ -34,7 +34,7 @@ public class Person {
 				inverseJoinColumns = { @JoinColumn(name = "ID_CONTACT") })
 	private List<Contact> contacts;
 	
-	@OneToOne(mappedBy = "person")
+	@OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "person")
 	@JsonIgnoreProperties(value = "person", allowSetters = true)
 	private User user;
 	

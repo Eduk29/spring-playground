@@ -32,8 +32,10 @@ public class PersonService {
 	}
 	
 	public Person save(Person person) {
-		this.fillContactWithSystemValue(person.getContacts());
-		return this.personRepository.save(person);
+		Person savedPerson = this.personRepository.save(person);
+		this.fillContactWithSystemValue(savedPerson.getContacts());
+		
+		return savedPerson;
 	}
 	
 	public Person update(Person person, Integer id) {
@@ -50,6 +52,22 @@ public class PersonService {
 	
 	public void remove(Integer id) {
 		this.personRepository.deleteById(id);
+	}
+	
+	public boolean personHasUser(Integer personId) {
+		Person personToFind = this.findById(personId);
+		return personToFind.getUser() != null &&
+				personToFind.getUser().getId() != null && 
+				personToFind.getUser().getLogin() != null &&
+				personToFind.getUser().getPassword() != null;
+	}
+	
+	public boolean validatePersonData(Person person) {
+		return person.getId() == null &&
+				person.getName() != null &&
+				person.getAge() != null &&
+				person.getHeight() != null &&
+				person.getWeight() != null;
 	}
 	
 	private void fillContactWithSystemValue (List<Contact> contacts) {
