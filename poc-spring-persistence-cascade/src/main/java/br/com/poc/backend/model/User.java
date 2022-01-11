@@ -23,7 +23,8 @@ public class User {
 	@Column(name = "ID_USER", nullable = false, precision = 9, scale = 0)
 	private Integer id;
 	
-	@OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	// Owner for Relationship between User and Person (JoinColumn)
+	@OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
 	@JoinColumn(name = "ID_PERSON", referencedColumnName = "ID_PERSON")
 	@JsonIgnoreProperties(value = "user", allowSetters = true)
 	private Person person;
@@ -52,6 +53,10 @@ public class User {
 
 	public Integer getId() {
 		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Person getPerson() {

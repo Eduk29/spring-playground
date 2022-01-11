@@ -13,5 +13,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	List<User> findAll();
 	User findById(Integer id);
 	Boolean existsById(Integer id);
-	
+	void deleteById(Integer id);
+
 }

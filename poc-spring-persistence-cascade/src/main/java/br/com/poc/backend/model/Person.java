@@ -28,13 +28,13 @@ public class Person {
 	private Integer id;
 	
 	@JsonIgnoreProperties(value = "persons", allowSetters = true)
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "POC_SPRING_CASCADE_REL_PERSON_CONTACT",
 				joinColumns = { @JoinColumn(name = "ID_PERSON") },
 				inverseJoinColumns = { @JoinColumn(name = "ID_CONTACT") })
 	private List<Contact> contacts;
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "person")
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "person", optional = true)
 	@JsonIgnoreProperties(value = "person", allowSetters = true)
 	private User user;
 	

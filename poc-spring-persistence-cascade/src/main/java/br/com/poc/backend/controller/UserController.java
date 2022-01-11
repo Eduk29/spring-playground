@@ -3,9 +3,11 @@ package br.com.poc.backend.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +39,21 @@ public class UserController {
 		return this.userService.findById(id);
 	}
 	
+	@PutMapping(path = "/{id}/update")
+	@ApiOperation(value = "Update a specific user.")
+	public User update(@RequestBody User user, @PathVariable("id") Integer id) {
+		return this.userService.update(user, id);
+	}
+	
 	@PostMapping(path = "/new", consumes = "application/json")
 	@ApiOperation(value = "Create a new user.")
 	public User save(@RequestBody User user) throws InvalidPersonException {
 		return this.userService.save(user);
+	}
+	
+	@DeleteMapping("/{id}/remove")
+	@ApiOperation(value = "Remove a specific user.")
+	public void remove(@PathVariable("id") Integer id) throws InvalidPersonException {
+		this.userService.remove(id);
 	}
 }

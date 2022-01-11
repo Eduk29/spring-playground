@@ -29,6 +29,18 @@ public class UserService {
 	public User findById(Integer id) {
 		return this.userRepository.findById(id);
 	}
+	
+	public User update(User user, Integer id) {
+		if (!!this.userRepository.existsById(id)) {
+			Integer userId = userRepository.findById(id).getId();
+			user.setId(userId);
+			userRepository.save(user);
+			
+			return userRepository.findById(id);
+		}
+		
+		return null;
+	}
 
 	public User save(User user) throws InvalidPersonException {
 		try {
@@ -49,6 +61,13 @@ public class UserService {
 		} catch (InvalidPersonException error) {
 			throw new InvalidPersonException(error.getMessage());
 		}
+	}
+	
+	public void remove(Integer id) throws InvalidPersonException {
+		User userToRemove = this.findById(id);
+		userToRemove.setPerson(null);
+		this.userRepository.save(userToRemove);
+		this.userRepository.deleteById(id);
 	}
 	
 	private boolean canCreateNewUser(User user) throws InvalidPersonException {
