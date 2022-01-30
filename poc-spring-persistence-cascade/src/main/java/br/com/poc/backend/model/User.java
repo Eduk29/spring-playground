@@ -1,5 +1,7 @@
 package br.com.poc.backend.model;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -28,6 +32,13 @@ public class User {
 	@JoinColumn(name = "ID_PERSON", referencedColumnName = "ID_PERSON")
 	@JsonIgnoreProperties(value = "user", allowSetters = true)
 	private Person person;
+	
+	@JsonIgnoreProperties(value = "users", allowSetters = true)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(name = "POC_SPRING_CASCADE_REL_USER_ROLE",
+				joinColumns = { @JoinColumn(name = "ID_USER") },
+				inverseJoinColumns = { @JoinColumn(name = "ID_ROLE") })
+	private List<Role> roles;
 	
 	@Column(name = "LOGIN_USER", nullable = true, length = 255)
 	private String login;
@@ -65,5 +76,13 @@ public class User {
 
 	public void setPerson(Person person) {
 		this.person = person;
+	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 }

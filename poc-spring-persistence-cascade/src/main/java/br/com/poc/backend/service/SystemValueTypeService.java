@@ -21,7 +21,6 @@ public class SystemValueTypeService {
 	
 	public List<SystemValueType> listAll() {
 		List<SystemValueType> systemValueTypeList = this.systemValueTypeRepository.findAll();
-//		this.prepareSystemValueTypeForRemoveContacts(systemValueTypeList);
 		return systemValueTypeList;
 	}
 	
@@ -29,7 +28,6 @@ public class SystemValueTypeService {
 		SystemValueType systemValueType = this.systemValueTypeRepository.findById(id);
 		List<SystemValueType> systemValueTypeList = new ArrayList<>();
 		systemValueTypeList.add(systemValueType);
-//		this.prepareSystemValueTypeForRemoveContacts(systemValueTypeList);
 		return systemValueTypeList.get(0);
 	}
 	

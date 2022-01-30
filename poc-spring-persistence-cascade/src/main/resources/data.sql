@@ -44,3 +44,20 @@ VALUES
     (2, 'steve.strange', '12345678'),
     (3, 'bruce.banner', '12345678'),
     (4, 'steve.rogers', '12345678');
+    
+INSERT INTO DEV_POC_SPRING_CASCADE_DATABASE.POC_SPRING_CASCADE_ROLE
+    (ID_ROLE, CODE_ROLE, DESCRIPTION_ROLE, NAME_ROLE)
+VALUES
+    (1, 'SYS_ADMIN', 'System Administrator', 'System Admin'),
+    (2, 'SYS_USER', 'System User', 'System user');
+   
+INSERT into DEV_POC_SPRING_CASCADE_DATABASE.POC_SPRING_CASCADE_REL_USER_ROLE
+    (ID_USER, ID_ROLE)
+VALUES
+    (1, 1),
+    (1, 2),
+    (2, 2),
+    (3, 1),
+    (3, 2),
+    (4, 2);
+    
