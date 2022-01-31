@@ -11,5 +11,6 @@ public interface RoleRepository extends CrudRepository<Role, Long> {
 	List<Role> findAll();
 	Role findById(Integer id);
 	Boolean existsById(Integer id);
+	Boolean existsByCode(String code);
 	void deleteById(Integer id);
 }
