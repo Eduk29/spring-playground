@@ -32,7 +32,8 @@ public class User {
 	@JoinColumn(name = "ID_PERSON", referencedColumnName = "ID_PERSON")
 	@JsonIgnoreProperties(value = "user", allowSetters = true)
 	private Person person;
-	
+
+	// Owner for Relationship between User and Role (JoinColumn)
 	@JsonIgnoreProperties(value = "users", allowSetters = true)
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "POC_SPRING_CASCADE_REL_USER_ROLE",

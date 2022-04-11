@@ -60,4 +60,12 @@ VALUES
     (3, 1),
     (3, 2),
     (4, 2);
+   
+INSERT INTO DEV_POC_SPRING_CASCADE_DATABASE.POC_SPRING_CASCADE_PERSON
+    (ID_PERSON, NAME_PERSON)
+VALUES
+    (1, 'Tony Stark'),
+    (2, 'Steve Strange'),
+    (3, 'Bruce Banner'),
+    (4, 'Steve Rogers');
     
