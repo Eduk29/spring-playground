@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloWorldController {
 
 	@GetMapping("")
-	private ResponseEntity<String> listAll() {
-		return new ResponseEntity<String>("Hello world funcionando!!!", HttpStatus.OK);
+	private ResponseEntity<String> helloWorld() {
+		return new ResponseEntity<String>("Hello user!", HttpStatus.OK);
+	}
+	
+	@GetMapping("/anonymous")
+	private ResponseEntity<String> helloWorldAnonymous() {
+		return new ResponseEntity<String>("Hello anonymous user, please login!!!", HttpStatus.OK);
 	}
 }

@@ -15,8 +15,16 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	public List<User> listAll() {
 		return this.userRepository.findAll();
+	}
+
+	public User listById(Integer id) {
+		return this.userRepository.findById(id);
+	}
+	
+	public User listByUsername(String username) {
+		return this.userRepository.findByUsername(username);
 	}
 }
