@@ -31,6 +31,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.httpBasic()
 			.and()
-			.authorizeRequests().anyRequest().authenticated();
+			.authorizeRequests()
+			.antMatchers("/hello-world/**").hasRole("USER")
+			.antMatchers("/users**").hasRole("ADMIN")
+			.anyRequest().authenticated();
 	}
+
 }

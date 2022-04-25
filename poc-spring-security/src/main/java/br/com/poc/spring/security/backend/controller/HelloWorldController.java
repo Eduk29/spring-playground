@@ -14,9 +14,4 @@ public class HelloWorldController {
 	private ResponseEntity<String> helloWorld() {
 		return new ResponseEntity<String>("Hello user!", HttpStatus.OK);
 	}
-	
-	@GetMapping("/anonymous")
-	private ResponseEntity<String> helloWorldAnonymous() {
-		return new ResponseEntity<String>("Hello anonymous user, please login!!!", HttpStatus.OK);
-	}
 }
