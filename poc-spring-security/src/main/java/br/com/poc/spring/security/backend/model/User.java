@@ -28,8 +28,8 @@ public class User {
 
 	// Owner for Relationship between User and Role (JoinColumn)
 	@JsonIgnoreProperties(value = "users", allowSetters = true)
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinTable(name = "POC_SPRING_CASCADE_REL_USER_ROLE",
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(name = "POC_SPRING_SECURITY_REL_USER_ROLE",
 				joinColumns = { @JoinColumn(name = "ID_USER") },
 				inverseJoinColumns = { @JoinColumn(name = "ID_ROLE") })
 	private List<Role> roles;

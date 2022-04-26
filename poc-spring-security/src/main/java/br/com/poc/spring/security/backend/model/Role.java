@@ -2,7 +2,6 @@ package br.com.poc.spring.security.backend.model;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -26,6 +24,11 @@ public class Role {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_ROLE", nullable = false, precision = 9, scale = 0)
 	private Integer id;
+	
+	@JsonIgnoreProperties(value = {"roles"})
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles")
+	@JsonInclude(Include.NON_NULL)
+	private List<User> users;
 	
 	@Column(name = "CODE_ROLE", nullable = true, length = 255)
 	private String code;
@@ -66,5 +69,13 @@ public class Role {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}	
 }
