@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/hello-world")
 public class HelloWorldController {
 
-	@GetMapping("")
-	private ResponseEntity<String> listAll() {
-		return new ResponseEntity<String>("Hello world funcionando!!!", HttpStatus.OK);
-	}
+    @GetMapping("")
+    private ResponseEntity<String> helloWorld() {
+        return new ResponseEntity<String>("Hello user!", HttpStatus.OK);
+    }
 }
