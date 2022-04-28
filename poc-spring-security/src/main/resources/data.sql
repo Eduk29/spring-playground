@@ -7,10 +7,10 @@ VALUES
     ('steve.rogers', '12345678');
     
 INSERT INTO DEV_POC_SPRING_SECURITY_DATABASE.POC_SPRING_SECURITY_ROLE
-    (ID_ROLE, CODE_ROLE, DESCRIPTION_ROLE, NAME_ROLE)
+    (CODE_ROLE, DESCRIPTION_ROLE, NAME_ROLE)
 VALUES
-    (1, 'ROLE_ADMIN', 'System Administrator', 'System Admin'),
-    (2, 'USER', 'System User', 'System user');
+    ('ROLE_ADMIN', 'System Administrator', 'System Admin'),
+    ('ROLE_USER', 'System User', 'System user');
    
 INSERT into DEV_POC_SPRING_SECURITY_DATABASE.POC_SPRING_SECURITY_REL_USER_ROLE
     (ID_USER, ID_ROLE)
