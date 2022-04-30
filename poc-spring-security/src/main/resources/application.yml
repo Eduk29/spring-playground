@@ -1,6 +1,7 @@
 server:
   port: 8080
   servlet:
+    context-path: /api
     session:
       timeout: 10
   error:
@@ -45,7 +46,7 @@ spring:
     driverClassName: org.mariadb.jdbc.Driver
     sqlScriptEncoding: UTF-8
     username: root
-    password: pitico2020
+    password: pitico
     
   jpa:
     hibernate:
@@ -68,6 +69,9 @@ spring:
 
   liquibase:
     enabled: true
+    
+jwt:
+  secret: poc-spring-security-secret
    
 logging:
   level:
