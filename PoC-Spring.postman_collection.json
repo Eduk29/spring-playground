@@ -659,19 +659,49 @@
 			"name": "Spring Security POC",
 			"item": [
 				{
+					"name": "Sign In",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"tony.stark\",\n    \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/authentication/sign-in",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"authentication",
+								"sign-in"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Hello World",
 					"request": {
 						"auth": {
 							"type": "basic",
 							"basic": [
 								{
-									"key": "password",
-									"value": "1234",
+									"key": "username",
+									"value": "tony.stark",
 									"type": "string"
 								},
 								{
-									"key": "username",
-									"value": "user1",
+									"key": "password",
+									"value": "12345678",
 									"type": "string"
 								}
 							]
@@ -679,14 +709,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/hello-world",
+							"raw": "http://localhost:8080/api/hello-world/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"hello-world"
+								"api",
+								"hello-world",
+								""
 							]
 						}
 					},
@@ -700,12 +732,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "1234",
+									"value": "12345678",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "user1",
+									"value": "tony.stark",
 									"type": "string"
 								}
 							]
@@ -713,14 +745,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users",
+							"raw": "http://localhost:8080/api/users/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"users"
+								"api",
+								"users",
+								""
 							]
 						}
 					},
