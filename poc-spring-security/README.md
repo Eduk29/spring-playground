@@ -80,14 +80,16 @@ In body tab, paste the following JSON code:
 ### In Memory Users
 
 * User
-  Username: user
-  Password: 1234
-  Roles: USER
+
+    Username: user
+    Password: 1234
+    Roles: USER
 
 * Admin
-  Username: admin
-  Password: admin
-  Roles: ADMIN
+
+    Username: admin
+    Password: admin
+    Roles: ADMIN
 
 ### Database Users
 
