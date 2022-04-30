@@ -75,7 +75,7 @@ In body tab, paste the following JSON code:
         Authenticated: NO
         Role: -
 
-## Application Uers
+## Application Users
 
 ### In Memory Users
 
