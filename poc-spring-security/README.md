@@ -81,9 +81,9 @@ In body tab, paste the following JSON code:
 
 * User
 
-    Username: user
-    Password: 1234
-    Roles: USER
+    Username: user  
+    Password: 1234  
+    Roles: USER  
 
 * Admin
 
