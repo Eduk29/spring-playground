@@ -91,22 +91,22 @@ In body tab, paste the following JSON code:
 
 ### Database Users
 
-1 - Tony Stark  
+* Tony Stark  
     Username: tony.stark  
     Passwork: 12345678  
     Roles: ADMIN, USER  
 
-2 - Steve Strange  
+* Steve Strange  
     Username: steve.strange  
     Passwork: 12345678  
     Roles: USER  
 
-3 - Bruce Banner  
+* Bruce Banner  
     Username: bruce.banner  
     Passwork: 12345678  
     Roles: ADMIN, USER  
 
-4 - Steve Rogers  
+* Steve Rogers  
     Username: steve.rogers  
     Passwork: 12345678  
     Roles: USER  
