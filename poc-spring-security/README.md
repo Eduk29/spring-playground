@@ -80,38 +80,36 @@ In body tab, paste the following JSON code:
 ### In Memory Users
 
 * User
-
     Username: user  
     Password: 1234  
     Roles: USER  
 
 * Admin
-
-    Username: admin
-    Password: admin
-    Roles: ADMIN
+    Username: admin  
+    Password: admin  
+    Roles: ADMIN  
 
 ### Database Users
 
 1 - Tony Stark
-    Username: tony.stark
-    Passwork: 12345678
-    Roles: ADMIN, USER
+    Username: tony.stark  
+    Passwork: 12345678  
+    Roles: ADMIN, USER  
 
 2 - Steve Strange
-    Username: steve.strange
-    Passwork: 12345678
-    Roles: USER
+    Username: steve.strange  
+    Passwork: 12345678  
+    Roles: USER  
 
 3 - Bruce Banner
-    Username: bruce.banner
-    Passwork: 12345678
-    Roles: ADMIN, USER
+    Username: bruce.banner  
+    Passwork: 12345678  
+    Roles: ADMIN, USER  
 
 4 - Steve Rogers
-    Username: steve.rogers
-    Passwork: 12345678
-    Roles: USER
+    Username: steve.rogers  
+    Passwork: 12345678  
+    Roles: USER  
 
 ## API Tags
 
