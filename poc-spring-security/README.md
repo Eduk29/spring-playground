@@ -79,15 +79,15 @@ In body tab, paste the following JSON code:
 
 ### In Memory Users
 
-1 - User
-    Username: user
-    Password: 1234
-    Roles: USER
+* User
+  Username: user
+  Password: 1234
+  Roles: USER
 
-2 - Admin
-    Username: admin
-    Password: admin
-    Roles: ADMIN
+* Admin
+  Username: admin
+  Password: admin
+  Roles: ADMIN
 
 ### Database Users
 
