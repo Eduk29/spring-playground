@@ -79,34 +79,34 @@ In body tab, paste the following JSON code:
 
 ### In Memory Users
 
-* User
+* User  
     Username: user  
     Password: 1234  
     Roles: USER  
 
-* Admin
+* Admin  
     Username: admin  
     Password: admin  
     Roles: ADMIN  
 
 ### Database Users
 
-1 - Tony Stark
+1 - Tony Stark  
     Username: tony.stark  
     Passwork: 12345678  
     Roles: ADMIN, USER  
 
-2 - Steve Strange
+2 - Steve Strange  
     Username: steve.strange  
     Passwork: 12345678  
     Roles: USER  
 
-3 - Bruce Banner
+3 - Bruce Banner  
     Username: bruce.banner  
     Passwork: 12345678  
     Roles: ADMIN, USER  
 
-4 - Steve Rogers
+4 - Steve Rogers  
     Username: steve.rogers  
     Passwork: 12345678  
     Roles: USER  
