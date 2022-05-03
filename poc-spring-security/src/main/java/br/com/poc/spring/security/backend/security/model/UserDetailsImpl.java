@@ -46,6 +46,10 @@ public class UserDetailsImpl implements UserDetails {
 	public List<Role> getRoles() {
 		return this.user.getRoles();
 	}
+	
+	public Integer getId() {
+		return this.user.getId();
+	}
 
 	@Override
 	public boolean isAccountNonExpired() {

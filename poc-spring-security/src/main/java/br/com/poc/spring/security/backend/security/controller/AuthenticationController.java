@@ -1,5 +1,6 @@
 package br.com.poc.spring.security.backend.security.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,10 +60,22 @@ public class AuthenticationController {
 	}
 	
 	private TokenCredentials createJWTTokenResponse (UserDetailsImpl userDetails) {
+		Integer id = userDetails.getId();
 		String username = userDetails.getUsername();
-		List<Role> roles = userDetails.getRoles();
+		List<String> roleStringList = normalizeRoleList(userDetails.getRoles());
 		String token = this.jwtTokenUtils.generateToken(userDetails);
 		
-		return new TokenCredentials(token, username, roles);
+		
+		return new TokenCredentials(id, token, username, roleStringList);
+	}
+	
+	private List<String> normalizeRoleList(List<Role> roles) {
+		List<String> roleStringList = new ArrayList<String>();
+		
+		for (int i = 0; i < roles.size(); i++) {
+			roleStringList.add(roles.get(i).getCode());
+		}
+		
+		return roleStringList;
 	}
 }
