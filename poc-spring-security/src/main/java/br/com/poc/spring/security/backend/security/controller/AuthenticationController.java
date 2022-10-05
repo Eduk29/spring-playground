@@ -37,7 +37,7 @@ public class AuthenticationController {
 	private JWTTokenUtils jwtTokenUtils;
 
 	@RequestMapping(value = "sign-in", method = RequestMethod.POST)
-	public ResponseEntity<?> authenticate(@RequestBody LoginCredentials loginCredentials) throws Exception {
+	public ResponseEntity<?> signIn(@RequestBody LoginCredentials loginCredentials) throws Exception {
 		try {
 			this.authenticate(loginCredentials.getUsername(), loginCredentials.getPassword());
 			
