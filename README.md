@@ -6,7 +6,8 @@ This repository is for study, tests and experiments applications using [Spring B
 
 - [Spring Persistence with Cascade Test](https://github.com/Eduk29/spring-playground/tree/main/poc-spring-persistence-cascade)
 - [Spring Security Authentication](https://github.com/Eduk29/spring-playground/tree/main/poc-spring-security)
-
+- Spring Microservices System
+    - Spring Authentication Microsservices
 This repository use some patterns like [Semantic Commit Messages](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716) and [Git flow](https://nvie.com/posts/a-successful-git-branching-model/).
 
 PS: If you use Postman, feel free to import the collection of calls from this repository
