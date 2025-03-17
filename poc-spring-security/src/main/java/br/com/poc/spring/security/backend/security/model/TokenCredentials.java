@@ -12,14 +12,14 @@ public class TokenCredentials implements Serializable {
 	private Integer id;
 	private String token;
 	private String username;
-	private List<Role> roles;
+	private List<String> roles;
 	
-	public TokenCredentials(String token, String username, List<Role> roles) {
+	public TokenCredentials(Integer id, String token, String username, List<String> roles) {
+		this.id = id;
 		this.token = token;
 		this.username = username;
 		this.roles = roles;
 	}
-	
 	
 	public Integer getId() {
 		return id;
@@ -45,11 +45,11 @@ public class TokenCredentials implements Serializable {
 		this.username = username;
 	}
 	
-	public List<Role> getRoles() {
+	public List<String> getRoles() {
 		return roles;
 	}
 	
-	public void setRoles(List<Role> roles) {
+	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}	
 }
