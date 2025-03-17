@@ -151,12 +151,4 @@ public class UserService {
 			throw new RuntimeException("User not found");
 		}
 	}
-
-	private void roleIdExist(Integer roleId) throws RuntimeException {
-		boolean roleIdExist = this.roleRepository.existsById(roleId);
-
-		if (!roleIdExist) {
-			throw new RuntimeException("Role not found");
-		}
-	}
 }

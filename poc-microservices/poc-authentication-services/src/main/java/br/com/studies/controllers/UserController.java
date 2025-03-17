@@ -18,14 +18,12 @@ import br.com.studies.dtos.CustomPage;
 import br.com.studies.dtos.RegisterUserRequestDTO;
 import br.com.studies.models.User;
 import br.com.studies.services.UserService;
-import br.com.studies.utils.JwtTokenUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("users")
@@ -34,12 +32,6 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private HttpServletRequest request;
-
-	@Autowired
-	private JwtTokenUtils jwtTokenUtils;
 
     @Operation(summary = "Delete a user by ID", description = "Deletes a user from the system. Requires ADMIN role.")
     @ApiResponses(value = {
