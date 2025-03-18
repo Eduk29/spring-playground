@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,11 +16,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
-	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	
 	public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter) {
 		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
 	}
@@ -31,7 +30,7 @@ public class SecurityConfiguration {
 		http.cors(c -> {
 			CorsConfigurationSource source = request -> {
 				CorsConfiguration configuration = new CorsConfiguration();
-				configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8080", "http://localhost:8081"));
+				configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8080"));
 				configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 				configuration
 						.setAllowedHeaders(List.of("Access-Control-Allow-Origin", "Content-Type", "Authorization"));
@@ -42,12 +41,11 @@ public class SecurityConfiguration {
 		}).csrf(AbstractHttpConfigurer::disable)
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll().requestMatchers("/authentication/**",
-								"/users/register", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
+						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll().requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
 						.permitAll().anyRequest().authenticated());
-
+		
 		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
+		
 		return http.build();
 	}
 
