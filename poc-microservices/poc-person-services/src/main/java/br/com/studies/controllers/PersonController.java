@@ -1,9 +1,7 @@
 package br.com.studies.controllers;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.studies.dtos.CustomPageDTO;
 import br.com.studies.models.Person;
 import br.com.studies.services.PersonService;
 
@@ -24,39 +23,71 @@ import br.com.studies.services.PersonService;
 @CrossOrigin(origins = "http://localhost:4200")
 public class PersonController {
 	@Autowired
-    private PersonService personService;
-	
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePerson(@PathVariable Long id) {
-        try {        	
-        	this.personService.deletePersonById(id);
-        	return ResponseEntity.noContent().build();
-        } catch (RuntimeException error) {        	
-        	return ResponseEntity.badRequest().body(error.getMessage());
-        }
-    }
-    
-    @GetMapping("/search")
-    public ResponseEntity<Optional<Person>> findPerson(@RequestParam String query) {  	
-        return ResponseEntity.ok(personService.findPerson(query));
-    }
-    
-    @GetMapping
-    public ResponseEntity<List<Person>> getAllPersons() {
-    	List<Person> persons = personService.getAllPersons();
-        return ResponseEntity.ok(persons);
-    }
-    
-    @PostMapping
-    public ResponseEntity<Person> createPerson(@RequestBody Person personToSave) {
-    	this.personService.create(personToSave);
-        return ResponseEntity.ok(personService.create(personToSave));
-    }
-    
-    @PutMapping("/{id}")
-    public ResponseEntity<Person> updatePerson(@PathVariable Long id, @RequestBody Person person) {
-        return ResponseEntity.ok(personService.updatePerson(id, person));
-    }
-    
+	private PersonService personService;
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteById(@PathVariable(value = "id") Integer id) {
+		try {
+			this.personService.deletePersonById(id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (RuntimeException error) {
+			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping("")
+	public ResponseEntity<?> findAll(@RequestParam(value = "$pageNumber", required = true) Integer pageNumber,
+			@RequestParam(value = "$pageSize", required = true) Integer pageSize) {
+		try {
+			CustomPageDTO<Person> response = this.personService.findAll(pageNumber, pageSize);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (RuntimeException error) {
+			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+
+	}
+
+	@GetMapping("{id}")
+	public ResponseEntity<?> findById(@PathVariable(value = "id") Integer id) {
+		try {
+			CustomPageDTO<Person> response = this.personService.findById(id);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (RuntimeException error) {
+			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping("register")
+	public ResponseEntity<?> register(@RequestBody Person personToSave) {
+		try {
+			CustomPageDTO<Person> response = this.personService.register(personToSave);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (RuntimeException error) {
+			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<?> search(
+			@RequestParam(value = "$pageNumber", required = false) Integer pageNumber,
+			@RequestParam(value = "$pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "$filter", required = false) String filter) {
+		try {
+			CustomPageDTO<Person> response = this.personService.searchByQuery(pageNumber, pageSize, filter);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (RuntimeException error) {
+			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PutMapping("/{id}/update")
+	public ResponseEntity<?> update(@PathVariable(value = "id") Integer id, @RequestBody Person person) {
+		try {
+			this.personService.updateById(id, person);
+			return new ResponseEntity<>(person, HttpStatus.OK);
+		} catch (RuntimeException error) {
+			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
 
 }

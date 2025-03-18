@@ -46,7 +46,7 @@ spring:
     driverClassName: org.mariadb.jdbc.Driver
     sqlScriptEncoding: UTF-8
     username: root
-    password: pitico
+    password: pitico2020
     
   jpa:
     hibernate:

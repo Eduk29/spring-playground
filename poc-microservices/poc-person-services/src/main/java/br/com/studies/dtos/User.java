@@ -1,10 +1,10 @@
 package br.com.studies.dtos;
 
-import org.springframework.security.core.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-import lombok.*;
-
-@Transient
 @Getter
 @Setter
 @AllArgsConstructor

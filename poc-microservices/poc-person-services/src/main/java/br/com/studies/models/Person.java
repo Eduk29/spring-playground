@@ -5,6 +5,8 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import br.com.studies.dtos.User;
+
 @Entity
 @Table(name = "persons", uniqueConstraints = {@UniqueConstraint(columnNames = "cpf"), @UniqueConstraint(columnNames = "userIdentifier")})
 @Getter
@@ -16,7 +18,7 @@ public class Person {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     
     @Column(nullable = false)
     private String name;
@@ -41,6 +43,18 @@ public class Person {
     
     @Transient
     private User user;
+    
+    public Person(Person person) {
+    	this.id = person.id;
+    	this.name = person.name;
+    	this.age = person.age;
+    	this.cpf = person.cpf;
+    	this.userId = person.userId;
+    	this.createdAt = person.createdAt;
+    	this.updatedAt = person.updatedAt;
+    	this.roles = person.roles;
+    	this.user = person.user;
+    }
 
 }
 
