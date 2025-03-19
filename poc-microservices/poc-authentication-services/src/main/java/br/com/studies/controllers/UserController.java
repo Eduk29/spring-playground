@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.studies.dtos.CustomPage;
 import br.com.studies.dtos.RegisterUserRequestDTO;
+import br.com.studies.dtos.UserInformationResponseDTO;
 import br.com.studies.models.User;
 import br.com.studies.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,7 +62,7 @@ public class UserController {
 			@RequestParam(value = "$pageNumber", required = true) Integer pageNumber,
 			@RequestParam(value = "$pageSize", required = true) Integer pageSize) {
 		try {			
-			CustomPage<User> response = this.userService.findAll(pageNumber, pageSize);
+			CustomPage<UserInformationResponseDTO> response = this.userService.findAll(pageNumber, pageSize);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (RuntimeException error) {
 			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST); 
@@ -78,7 +79,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> findById(@PathVariable(value = "id") Integer id) {
 		try {
-			CustomPage<User> response = this.userService.findById(id);
+			CustomPage<UserInformationResponseDTO> response = this.userService.findById(id);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (RuntimeException error) {
 			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
@@ -94,7 +95,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> promote(@PathVariable(value = "id") Integer id) {
 		try {
-			CustomPage<User> response = this.userService.promote(id);
+			CustomPage<UserInformationResponseDTO> response = this.userService.promote(id);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception error) {
 			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);

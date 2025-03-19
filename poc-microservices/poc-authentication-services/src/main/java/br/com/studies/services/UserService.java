@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.studies.dtos.CustomPage;
 import br.com.studies.dtos.RegisterUserRequestDTO;
+import br.com.studies.dtos.UserInformationResponseDTO;
 import br.com.studies.models.Role;
 import br.com.studies.models.User;
 import br.com.studies.repositories.RoleRepository;
@@ -43,38 +44,40 @@ public class UserService {
 		this.userRepository.deleteById(userId);
 	}
 
-	public CustomPage<User> findAll(Integer pageNumber, Integer pageSize) {
-		if (!PaginationUtils.validatePageNumber(pageNumber)) {
-			pageNumber = PaginationUtils.setDefaultPageNumber();
-		}
+	public CustomPage<UserInformationResponseDTO> findAll(Integer pageNumber, Integer pageSize) {
+	    if (!PaginationUtils.validatePageNumber(pageNumber)) {
+	        pageNumber = PaginationUtils.setDefaultPageNumber();
+	    }
 
-		if (!PaginationUtils.validatePageSize(pageSize)) {
-			pageSize = PaginationUtils.setDefaultPageSize();
-		}
+	    if (!PaginationUtils.validatePageSize(pageSize)) {
+	        pageSize = PaginationUtils.setDefaultPageSize();
+	    }
 
-		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-		Page<User> page = this.userRepository.findAll(pageable);
-		
-		CustomPage<User> customPage = new CustomPage<>(page);
-		return customPage;
+	    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+	    Page<User> page = this.userRepository.findAll(pageable);
+	    Page<UserInformationResponseDTO> responsePage = page.map(UserInformationResponseDTO::new);
+
+	    return new CustomPage<UserInformationResponseDTO>(responsePage);
 	}
 
-	public CustomPage<User> findById(Integer userId) {
+	public CustomPage<UserInformationResponseDTO> findById(Integer userId) {
 		this.userIDExistsInDB(userId);
 		Pageable pageable = PageRequest.of(0, 1);
-		Page<User> page = this.userRepository.findById(userId, pageable); 
-		CustomPage<User> response = new CustomPage<User>(page);
+		Page<User> page = this.userRepository.findById(userId, pageable);
+		Page<UserInformationResponseDTO> responsePage = page.map(UserInformationResponseDTO::new);
+		CustomPage<UserInformationResponseDTO> response = new CustomPage<UserInformationResponseDTO>(responsePage);
 		return response;
 	}
 	
-	public CustomPage<User> findByUsername(String username) {
-		Pageable pageable = PageRequest.of(0, 1);
-		Page<User> page = this.userRepository.findByUsername(username, pageable);
-		CustomPage<User> response = new CustomPage<User>(page);
-		return response;
+	public CustomPage<UserInformationResponseDTO> findByUsername(String username) {
+	    Pageable pageable = PageRequest.of(0, 1);
+	    Page<User> page = this.userRepository.findByUsername(username, pageable);
+	    Page<UserInformationResponseDTO> responsePage = page.map(UserInformationResponseDTO::new);
+
+	    return new CustomPage<>(responsePage);
 	}
 
-	public CustomPage<User> promote(Integer userId) throws Exception {
+	public CustomPage<UserInformationResponseDTO> promote(Integer userId) throws Exception {
 	    User user = userRepository.findById(userId)
 	            .orElseThrow(() -> new NoSuchElementException("User not found"));
 
@@ -87,11 +90,12 @@ public class UserService {
 
 	    user.getRoles().add(adminRole);
 	    User updatedUser = userRepository.save(user);
+	    UserInformationResponseDTO response = new UserInformationResponseDTO(updatedUser);
 
-	    return new CustomPage<>(updatedUser);
+	    return new CustomPage<UserInformationResponseDTO>(response);
 	}
 
-	public CustomPage<User> register(RegisterUserRequestDTO registerUserRequestDTO) throws RuntimeException {
+	public CustomPage<UserInformationResponseDTO> register(RegisterUserRequestDTO registerUserRequestDTO) throws RuntimeException {
 		Set<String> roleNames = registerUserRequestDTO.getRoles();
 
 		if (roleNames == null || roleNames.isEmpty()) {
@@ -106,10 +110,11 @@ public class UserService {
 
 		User user = this.constructUser(registerUserRequestDTO, roles);
 		User userRegistered = this.userRepository.save(user);
+		
 		return this.findById(userRegistered.getId());
 	}
 
-	public CustomPage<User> updateById(RegisterUserRequestDTO registerUserRequestDTO, Integer userId) {
+	public CustomPage<UserInformationResponseDTO> updateById(RegisterUserRequestDTO registerUserRequestDTO, Integer userId) {
 	    this.userIDExistsInDB(userId);
 
 	    User existingUser = userRepository.findById(userId)
@@ -121,7 +126,7 @@ public class UserService {
 
 	    User savedUser = userRepository.save(updatedUser);
 	    
-	    return new CustomPage<>(savedUser);
+	    return this.findById(savedUser.getId());
 	}
 	
 	public Boolean userExistInDB(String username) {
