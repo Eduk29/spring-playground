@@ -17,24 +17,27 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
 public class AuthenticationService {
 
-	@Value("${auth.service.url}")
+	@Value("${authentication.service.url}")
 	private String authServiceUrl;
-	
-    @Value("${security.jwt.secret-key}")
-    private String secretKey;
+
+	@Value("${security.jwt.secret-key}")
+	private String secretKey;
 
 	private final RestTemplate restTemplate = new RestTemplate();
 
-	public void authenticate(String token) throws SignatureException {
+	public void authenticate(String token) {
 		try {
 			String url = authServiceUrl + "/authentication/validate-token";
 			HttpHeaders headers = new HttpHeaders();
@@ -51,8 +54,10 @@ public class AuthenticationService {
 
 			Claims claims = extractClaims(token);
 
-			List<String> roles = (List<String>) claims.get("roles");
-			
+			Object rolesClaim = claims.get("roles");
+			List<String> roles = new ObjectMapper().convertValue(rolesClaim, new TypeReference<List<String>>() {
+			});
+
 			List<SimpleGrantedAuthority> authorities = roles.stream()
 					.map(role -> role.startsWith("ROLE_") ? role : role).map(SimpleGrantedAuthority::new)
 					.collect(Collectors.toList());
@@ -60,40 +65,35 @@ public class AuthenticationService {
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 					claims.getSubject(), null, authorities);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			
-			System.out.println("Usuário autenticado: " + claims.getSubject());
-			System.out.println("Roles do JWT: " + claims.get("roles"));
-			System.out.println("Roles no SecurityContext: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 
+		} catch (JwtException e) {
+			SecurityContextHolder.clearContext();
+			throw new RuntimeException("Invalid or expired token.");
 		} catch (Exception e) {
 			SecurityContextHolder.clearContext();
-			throw new RuntimeException("Invalid or expired token 456.");
+			throw new RuntimeException("Unexpected error during authentication.", e);
 		}
 	}
 
 	private Claims extractClaims(String token) {
-	    SecretKey key = getSignInKey();
+		SecretKey key = getSignInKey();
 
-	    return Jwts.parserBuilder()
-	            .setSigningKey(key)
-	            .build()
-	            .parseClaimsJws(token.replace("Bearer ", ""))
-	            .getBody();
+		return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token.replace("Bearer ", "")).getBody();
 	}
 
 	private SecretKey getSignInKey() {
-	    byte[] keyBytes;
-	    
-	    if (secretKey.length() < 32) {
-	        throw new IllegalArgumentException("Secret key must be at least 32 bytes for HS256");
-	    }
+		byte[] keyBytes;
 
-	    try {
-	        keyBytes = Decoders.BASE64.decode(secretKey);
-	    } catch (IllegalArgumentException e) {
-	        keyBytes = secretKey.getBytes();
-	    }
+		if (secretKey.length() < 32) {
+			throw new IllegalArgumentException("Secret key must be at least 32 bytes for HS256");
+		}
 
-	    return Keys.hmacShaKeyFor(keyBytes);
+		try {
+			keyBytes = Decoders.BASE64.decode(secretKey);
+		} catch (IllegalArgumentException e) {
+			keyBytes = secretKey.getBytes();
+		}
+
+		return Keys.hmacShaKeyFor(keyBytes);
 	}
 }

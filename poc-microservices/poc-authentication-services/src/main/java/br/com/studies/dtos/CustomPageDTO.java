@@ -17,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomPage<T> {
+public class CustomPageDTO<T> {
 	private List<T> content;
 	private Integer totalPages;
 	private Long totalElements;
@@ -25,7 +25,7 @@ public class CustomPage<T> {
 	private Integer pageNumber;
 	private String timestamp;
 
-	public CustomPage(Page<T> page) {
+	public CustomPageDTO(Page<T> page) {
 		this.content = (List<T>) page.getContent();
 		this.totalElements = page.getTotalElements();
 		this.totalPages = page.getTotalPages();
@@ -34,7 +34,7 @@ public class CustomPage<T> {
 		this.timestamp = new Date().toInstant().toString();
 	}
 	
-	public CustomPage(T input) {
+	public CustomPageDTO(T input) {
 		List<T> inputList = new ArrayList<T>();
 		inputList.add(input);
 		

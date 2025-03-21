@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.studies.dtos.CustomPage;
+import br.com.studies.dtos.CustomPageDTO;
 import br.com.studies.dtos.RegisterUserRequestDTO;
 import br.com.studies.dtos.UserInformationResponseDTO;
 import br.com.studies.models.User;
@@ -53,7 +53,7 @@ public class UserController {
     @Operation(summary = "Get all users", description = "Returns a paginated list of all users. Requires ADMIN role.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Users retrieved successfully", 
-                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomPage.class))),
+                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomPageDTO.class))),
         @ApiResponse(responseCode = "400", description = "Invalid request parameters")
     })
 	@GetMapping("")
@@ -62,7 +62,7 @@ public class UserController {
 			@RequestParam(value = "$pageNumber", required = true) Integer pageNumber,
 			@RequestParam(value = "$pageSize", required = true) Integer pageSize) {
 		try {			
-			CustomPage<UserInformationResponseDTO> response = this.userService.findAll(pageNumber, pageSize);
+			CustomPageDTO<UserInformationResponseDTO> response = this.userService.findAll(pageNumber, pageSize);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (RuntimeException error) {
 			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST); 
@@ -79,7 +79,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> findById(@PathVariable(value = "id") Integer id) {
 		try {
-			CustomPage<UserInformationResponseDTO> response = this.userService.findById(id);
+			CustomPageDTO<UserInformationResponseDTO> response = this.userService.findById(id);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (RuntimeException error) {
 			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
@@ -95,7 +95,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> promote(@PathVariable(value = "id") Integer id) {
 		try {
-			CustomPage<UserInformationResponseDTO> response = this.userService.promote(id);
+			CustomPageDTO<UserInformationResponseDTO> response = this.userService.promote(id);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception error) {
 			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
@@ -111,8 +111,8 @@ public class UserController {
 	@PostMapping("register")
 	public ResponseEntity<?> register(@RequestBody RegisterUserRequestDTO registerUserRequestDTO) {
 		try {
-			this.userService.register(registerUserRequestDTO);
-			return new ResponseEntity<>(registerUserRequestDTO, HttpStatus.OK);
+			CustomPageDTO<UserInformationResponseDTO> response = this.userService.register(registerUserRequestDTO);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (RuntimeException error) {
 			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
 		}
@@ -128,8 +128,8 @@ public class UserController {
 	public ResponseEntity<?> update(@PathVariable(value = "id") Integer id,
 			@RequestBody RegisterUserRequestDTO registerUserRequestDTO) {
 		try {
-			this.userService.updateById(registerUserRequestDTO, id);
-			return new ResponseEntity<>(registerUserRequestDTO, HttpStatus.OK);
+			CustomPageDTO<UserInformationResponseDTO> response = this.userService.updateById(registerUserRequestDTO, id);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (RuntimeException error) {
 			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
 		}

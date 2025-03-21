@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.com.studies.dtos.CustomPage;
+import br.com.studies.dtos.CustomPageDTO;
 import br.com.studies.dtos.RegisterUserRequestDTO;
 import br.com.studies.dtos.UserInformationResponseDTO;
 import br.com.studies.models.Role;
@@ -44,7 +44,7 @@ public class UserService {
 		this.userRepository.deleteById(userId);
 	}
 
-	public CustomPage<UserInformationResponseDTO> findAll(Integer pageNumber, Integer pageSize) {
+	public CustomPageDTO<UserInformationResponseDTO> findAll(Integer pageNumber, Integer pageSize) {
 	    if (!PaginationUtils.validatePageNumber(pageNumber)) {
 	        pageNumber = PaginationUtils.setDefaultPageNumber();
 	    }
@@ -57,27 +57,33 @@ public class UserService {
 	    Page<User> page = this.userRepository.findAll(pageable);
 	    Page<UserInformationResponseDTO> responsePage = page.map(UserInformationResponseDTO::new);
 
-	    return new CustomPage<UserInformationResponseDTO>(responsePage);
+	    return new CustomPageDTO<UserInformationResponseDTO>(responsePage);
 	}
 
-	public CustomPage<UserInformationResponseDTO> findById(Integer userId) {
+	public CustomPageDTO<UserInformationResponseDTO> findById(Integer userId) {
 		this.userIDExistsInDB(userId);
 		Pageable pageable = PageRequest.of(0, 1);
 		Page<User> page = this.userRepository.findById(userId, pageable);
 		Page<UserInformationResponseDTO> responsePage = page.map(UserInformationResponseDTO::new);
-		CustomPage<UserInformationResponseDTO> response = new CustomPage<UserInformationResponseDTO>(responsePage);
+		CustomPageDTO<UserInformationResponseDTO> response = new CustomPageDTO<UserInformationResponseDTO>(responsePage);
 		return response;
 	}
 	
-	public CustomPage<UserInformationResponseDTO> findByUsername(String username) {
+	public CustomPageDTO<UserInformationResponseDTO> findByUsername(String username) {
 	    Pageable pageable = PageRequest.of(0, 1);
 	    Page<User> page = this.userRepository.findByUsername(username, pageable);
 	    Page<UserInformationResponseDTO> responsePage = page.map(UserInformationResponseDTO::new);
 
-	    return new CustomPage<>(responsePage);
+	    return new CustomPageDTO<>(responsePage);
+	}
+	
+	public User findUsername(String username) {
+	    User user = this.userRepository.findByUsername(username).orElseThrow();
+
+	    return user;
 	}
 
-	public CustomPage<UserInformationResponseDTO> promote(Integer userId) throws Exception {
+	public CustomPageDTO<UserInformationResponseDTO> promote(Integer userId) throws Exception {
 	    User user = userRepository.findById(userId)
 	            .orElseThrow(() -> new NoSuchElementException("User not found"));
 
@@ -92,10 +98,10 @@ public class UserService {
 	    User updatedUser = userRepository.save(user);
 	    UserInformationResponseDTO response = new UserInformationResponseDTO(updatedUser);
 
-	    return new CustomPage<UserInformationResponseDTO>(response);
+	    return new CustomPageDTO<UserInformationResponseDTO>(response);
 	}
 
-	public CustomPage<UserInformationResponseDTO> register(RegisterUserRequestDTO registerUserRequestDTO) throws RuntimeException {
+	public CustomPageDTO<UserInformationResponseDTO> register(RegisterUserRequestDTO registerUserRequestDTO) throws RuntimeException {
 		Set<String> roleNames = registerUserRequestDTO.getRoles();
 
 		if (roleNames == null || roleNames.isEmpty()) {
@@ -114,7 +120,7 @@ public class UserService {
 		return this.findById(userRegistered.getId());
 	}
 
-	public CustomPage<UserInformationResponseDTO> updateById(RegisterUserRequestDTO registerUserRequestDTO, Integer userId) {
+	public CustomPageDTO<UserInformationResponseDTO> updateById(RegisterUserRequestDTO registerUserRequestDTO, Integer userId) {
 	    this.userIDExistsInDB(userId);
 
 	    User existingUser = userRepository.findById(userId)

@@ -1,12 +1,12 @@
 package br.com.studies.dtos;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import org.springframework.security.core.Transient;
 
-import br.com.studies.models.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Transient
 @Getter
@@ -20,9 +20,6 @@ public class PersonDTO {
     private String name;
     private Integer age;
     private String cpf;
-    private String userId;
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
-    private List<String> roles;
-    private User user;
+    private String createdAt;
+    private String updatedAt;
 }

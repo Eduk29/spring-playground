@@ -1,11 +1,22 @@
 package br.com.studies.models;
 
-import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
-import br.com.studies.dtos.User;
+import br.com.studies.dtos.UserDTO;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "persons", uniqueConstraints = {@UniqueConstraint(columnNames = "cpf"), @UniqueConstraint(columnNames = "userIdentifier")})
@@ -42,7 +53,7 @@ public class Person {
     private List<String> roles;
     
     @Transient
-    private User user;
+    private UserDTO user;
     
     public Person(Person person) {
     	this.id = person.id;
