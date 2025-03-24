@@ -14,8 +14,10 @@ import org.springframework.web.client.RestTemplate;
 import br.com.studies.dtos.CustomPageDTO;
 import br.com.studies.dtos.UserWithRolesDTO;
 import br.com.studies.utils.JwtTokenUtils;
+import io.swagger.v3.oas.annotations.Hidden;
 
 @Service
+@Hidden
 public class UserService {
 
 	@Value("${authentication.service.url}")
