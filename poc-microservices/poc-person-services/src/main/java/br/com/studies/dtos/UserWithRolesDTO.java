@@ -1,20 +1,18 @@
 package br.com.studies.dtos;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Builder
-public class UserDTO {
-
+@AllArgsConstructor
+public class UserWithRolesDTO {
 	private Long id;
 	private String username;
 	private String createdAt;
 	private String updatedAt;
+	private List<String> roles;
 }

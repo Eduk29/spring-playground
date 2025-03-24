@@ -102,8 +102,8 @@ public class PersonController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> update(@PathVariable(value = "id") Integer id, @RequestBody Person person) {
 		try {
-			this.personService.updateById(id, person);
-			return new ResponseEntity<>(person, HttpStatus.OK);
+			CustomPageDTO<Person> response = this.personService.updateById(id, person);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (RuntimeException error) {
 			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
 		}

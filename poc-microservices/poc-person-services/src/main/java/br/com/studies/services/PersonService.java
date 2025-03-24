@@ -2,7 +2,9 @@ package br.com.studies.services;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.studies.dtos.CustomPageDTO;
+import br.com.studies.dtos.UserDTO;
+import br.com.studies.dtos.UserWithRolesDTO;
 import br.com.studies.enums.MessagesEnum;
 import br.com.studies.models.Person;
 import br.com.studies.repositories.PersonRepository;
@@ -22,6 +26,9 @@ import br.com.studies.utils.PaginationUtils;
 public class PersonService {
 	@Autowired
 	private PersonRepository personRepository;
+	
+	@Autowired
+	private UserService userService;
 
 	public void deletePersonById(Integer id) {
 		this.personExistsInDB(id);
@@ -29,28 +36,30 @@ public class PersonService {
 	}
 
 	public CustomPageDTO<Person> findAll(Integer pageNumber, Integer pageSize) {
-		if (!PaginationUtils.validatePageNumber(pageNumber)) {
-			pageNumber = PaginationUtils.setDefaultPageNumber();
-		}
-
-		if (!PaginationUtils.validatePageSize(pageSize)) {
-			pageSize = PaginationUtils.setDefaultPageSize();
-		}
+		if (!PaginationUtils.validatePageNumber(pageNumber)) pageNumber = PaginationUtils.setDefaultPageNumber();
+		if (!PaginationUtils.validatePageSize(pageSize)) pageSize = PaginationUtils.setDefaultPageSize();
 
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
 		Page<Person> page = this.personRepository.findAll(pageable);
 
-		CustomPageDTO<Person> customPage = new CustomPageDTO<>(page);
-		return customPage;
+		List<Person> enriched = page.getContent().stream()
+			.map(this::buildPersonWithUser)
+			.collect(Collectors.toList());
+
+		return new CustomPageDTO<>(new PageImpl<>(enriched, pageable, page.getTotalElements()));
 	}
 
 	public CustomPageDTO<Person> findById(Integer id) {
 		this.personExistsInDB(id);
+
 		Pageable pageable = PageRequest.of(0, 1);
 		Page<Person> page = this.personRepository.findById(id, pageable);
-		CustomPageDTO<Person> response = new CustomPageDTO<Person>(page);
 
-		return response;
+		List<Person> enriched = page.getContent().stream()
+			.map(this::buildPersonWithUser)
+			.collect(Collectors.toList());
+
+		return new CustomPageDTO<>(new PageImpl<>(enriched, pageable, page.getTotalElements()));
 	}
 
 	public CustomPageDTO<Person> register(Person person) {
@@ -66,25 +75,25 @@ public class PersonService {
 		this.validateSearchFilter(query);
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
 		Page<Person> page;
-			
-		switch(FilterUtils.getModeSearch(query)) {
+
+		switch (FilterUtils.getModeSearch(query)) {
 			case "name":
 				page = this.personRepository.findByNameContainsIgnoreCase(pageable, FilterUtils.getParameterSearch(query));
 				break;
-				
 			case "cpf":
 				page = this.personRepository.findByCpf(FilterUtils.getParameterSearch(query), pageable);
 				break;
-				
 			default:
 				page = new PageImpl<>(Collections.emptyList(), pageable, 0);
 				break;
-				
 		}
-		
-		CustomPageDTO<Person> response = new CustomPageDTO<Person>(page);
-		return response;
-    }
+
+		List<Person> enriched = page.getContent().stream()
+			.map(this::buildPersonWithUser)
+			.collect(Collectors.toList());
+
+		return new CustomPageDTO<>(new PageImpl<>(enriched, pageable, page.getTotalElements()));
+	}
 
 	public CustomPageDTO<Person> updateById(Integer id, Person personToUpdate) {
 	    this.personExistsInDB(id);
@@ -93,7 +102,27 @@ public class PersonService {
 	    personToUpdate.setId(id);
 	    Person personUpdated = this.personRepository.save(personToUpdate);
 	    
-	    return new CustomPageDTO<Person>(personUpdated);
+	    return this.findById(personUpdated.getId());
+	}
+	
+	private Person buildPersonWithUser(Person person) {
+		Person enriched = new Person(person);
+		try {
+			UserWithRolesDTO user = this.userService.getUserById(person.getUserId());
+			if (user != null) {
+				UserDTO userDTO = new UserDTO(
+					user.getId(),
+					user.getUsername(),
+					user.getCreatedAt(),
+					user.getUpdatedAt()
+				);
+				enriched.setUser(userDTO);
+				enriched.setRoles(user.getRoles());
+			}
+		} catch (Exception e) {
+			System.out.printf("⚠️ Erro ao buscar usuário para pessoa ID %d: %s%n", person.getId(), e.getMessage());
+		}
+		return enriched;
 	}
 
 	private Person constructPerson(Person personToAdd) {

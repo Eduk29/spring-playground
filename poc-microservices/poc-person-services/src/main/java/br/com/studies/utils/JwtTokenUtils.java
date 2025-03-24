@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class JwtTokenUtils {
@@ -24,6 +26,13 @@ public class JwtTokenUtils {
 
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
+    
+    private final HttpServletRequest request;
+    
+    public JwtTokenUtils(HttpServletRequest request) {
+        this.request = request;
+    }
+
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -44,6 +53,14 @@ public class JwtTokenUtils {
 
     public long getExpirationTime() {
         return jwtExpiration;
+    }
+    
+    public String getAuthToken() {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return null;
     }
 
     private String buildToken(

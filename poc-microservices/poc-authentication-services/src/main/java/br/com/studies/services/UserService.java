@@ -68,15 +68,16 @@ public class UserService {
 		return new CustomPageDTO<>(PaginationUtils.listAsPage(userResponses, pageable));
 	}
 
-	public CustomPageDTO<UserInformationResponseDTO> findById(Integer userId) {
+	public CustomPageDTO<UserInformationResponseDTO> findById(Integer userId, Boolean enrichPerson) {
 		this.userIDExistsInDB(userId);
-
+		boolean enrich = enrichPerson != null ? enrichPerson : true;
+		
 		Pageable pageable = PageRequest.of(0, 1);
 		Page<User> page = this.userRepository.findById(userId, pageable);
 
 		List<UserInformationResponseDTO> userResponses = page.getContent().stream()
-			.map(this::buildUserWithPerson)
-			.collect(Collectors.toList());
+				.map(user -> enrich ? buildUserWithPerson(user) : new UserInformationResponseDTO(user))
+				.collect(Collectors.toList());
 
 		return new CustomPageDTO<>(PaginationUtils.listAsPage(userResponses, pageable));
 	}
@@ -133,7 +134,7 @@ public class UserService {
 		User user = this.constructUser(registerUserRequestDTO, roles);
 		User userRegistered = this.userRepository.save(user);
 		
-		return this.findById(userRegistered.getId());
+		return this.findById(userRegistered.getId(), true);
 	}
 
 	public CustomPageDTO<UserInformationResponseDTO> updateById(RegisterUserRequestDTO registerUserRequestDTO, Integer userId) {
@@ -148,7 +149,7 @@ public class UserService {
 
 	    User savedUser = userRepository.save(updatedUser);
 	    
-	    return this.findById(savedUser.getId());
+	    return this.findById(savedUser.getId(), true);
 	}
 	
 	public Boolean userExistInDB(String username) {

@@ -77,9 +77,9 @@ public class UserController {
     })
 	@GetMapping("{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> findById(@PathVariable(value = "id") Integer id) {
+	public ResponseEntity<?> findById(@PathVariable(value = "id") Integer id, @RequestParam(value = "$enrichPerson", required = false) Boolean insertPerson) {
 		try {
-			CustomPageDTO<UserInformationResponseDTO> response = this.userService.findById(id);
+			CustomPageDTO<UserInformationResponseDTO> response = this.userService.findById(id, insertPerson);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (RuntimeException error) {
 			return new ResponseEntity<>(error.getMessage(), HttpStatus.BAD_REQUEST);
