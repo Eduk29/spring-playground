@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.studies.dtos.LoginRequestDTO;
 import br.com.studies.dtos.LoginResponseDTO;
+import br.com.studies.dtos.PersonDTO;
 import br.com.studies.dtos.UserInformationResponseDTO;
 import br.com.studies.models.User;
 import br.com.studies.models.UserDetailsImpl;
@@ -28,6 +29,9 @@ public class AuthenticationService {
 
 	@Autowired
 	private JwtTokenUtils jwtTokenUtils;
+	
+	@Autowired
+	private PersonService personService;
 
 	public AuthenticationService(UserRepository userRepository, AuthenticationManager authenticationManager,
 			PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
@@ -45,15 +49,25 @@ public class AuthenticationService {
 	public UserInformationResponseDTO whoIAm() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		
 		User user = this.userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
-		UserInformationResponseDTO userInformationConverted = new UserInformationResponseDTO(user);
 
-		return userInformationConverted;
+		return buildUserWithPerson(user);
 	}
 	
 	public LoginResponseDTO renewToken(String token) {
 		String username = jwtTokenUtils.extractUsername(token);
 		User user = this.userRepository.findByUsername(username).orElseThrow();
 		return new LoginResponseDTO(user, jwtTokenUtils);
+	}
+	
+	private UserInformationResponseDTO buildUserWithPerson(User user) {
+		try {
+			PersonDTO person = personService.getPersonById(user.getPersonId());
+			user.setPerson(person);
+		} catch (Exception e) {
+			System.out.println("Person not foud: " + user.getUsername() + ": " + e.getMessage());
+		}
+		return new UserInformationResponseDTO(user);
 	}
 }

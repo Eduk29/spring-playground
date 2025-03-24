@@ -9,16 +9,20 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserDetailsImpl implements UserDetails {
 
 	private static final long serialVersionUID = -8489053074208206273L;
 
 	private User user;
-
-	public UserDetailsImpl(User user) {
-		this.user = user;
-	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

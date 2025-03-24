@@ -1,6 +1,7 @@
 package br.com.studies.services;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.studies.dtos.CustomPageDTO;
+import br.com.studies.dtos.PersonDTO;
 import br.com.studies.dtos.RegisterUserRequestDTO;
 import br.com.studies.dtos.UserInformationResponseDTO;
 import br.com.studies.models.Role;
@@ -29,6 +31,9 @@ public class UserService {
 
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	private PersonService personService;
 
 	@Autowired
 	private final PasswordEncoder passwordEncoder;
@@ -45,36 +50,46 @@ public class UserService {
 	}
 
 	public CustomPageDTO<UserInformationResponseDTO> findAll(Integer pageNumber, Integer pageSize) {
-	    if (!PaginationUtils.validatePageNumber(pageNumber)) {
-	        pageNumber = PaginationUtils.setDefaultPageNumber();
-	    }
+		if (!PaginationUtils.validatePageNumber(pageNumber)) {
+			pageNumber = PaginationUtils.setDefaultPageNumber();
+		}
 
-	    if (!PaginationUtils.validatePageSize(pageSize)) {
-	        pageSize = PaginationUtils.setDefaultPageSize();
-	    }
+		if (!PaginationUtils.validatePageSize(pageSize)) {
+			pageSize = PaginationUtils.setDefaultPageSize();
+		}
 
-	    Pageable pageable = PageRequest.of(pageNumber, pageSize);
-	    Page<User> page = this.userRepository.findAll(pageable);
-	    Page<UserInformationResponseDTO> responsePage = page.map(UserInformationResponseDTO::new);
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<User> page = userRepository.findAll(pageable);
 
-	    return new CustomPageDTO<UserInformationResponseDTO>(responsePage);
+		List<UserInformationResponseDTO> userResponses = page.getContent().stream()
+			.map(this::buildUserWithPerson)
+			.collect(Collectors.toList());
+
+		return new CustomPageDTO<>(PaginationUtils.listAsPage(userResponses, pageable));
 	}
 
 	public CustomPageDTO<UserInformationResponseDTO> findById(Integer userId) {
 		this.userIDExistsInDB(userId);
+
 		Pageable pageable = PageRequest.of(0, 1);
 		Page<User> page = this.userRepository.findById(userId, pageable);
-		Page<UserInformationResponseDTO> responsePage = page.map(UserInformationResponseDTO::new);
-		CustomPageDTO<UserInformationResponseDTO> response = new CustomPageDTO<UserInformationResponseDTO>(responsePage);
-		return response;
+
+		List<UserInformationResponseDTO> userResponses = page.getContent().stream()
+			.map(this::buildUserWithPerson)
+			.collect(Collectors.toList());
+
+		return new CustomPageDTO<>(PaginationUtils.listAsPage(userResponses, pageable));
 	}
 	
 	public CustomPageDTO<UserInformationResponseDTO> findByUsername(String username) {
-	    Pageable pageable = PageRequest.of(0, 1);
-	    Page<User> page = this.userRepository.findByUsername(username, pageable);
-	    Page<UserInformationResponseDTO> responsePage = page.map(UserInformationResponseDTO::new);
+		Pageable pageable = PageRequest.of(0, 1);
+		Page<User> page = this.userRepository.findByUsername(username, pageable);
 
-	    return new CustomPageDTO<>(responsePage);
+		List<UserInformationResponseDTO> userResponses = page.getContent().stream()
+			.map(this::buildUserWithPerson)
+			.collect(Collectors.toList());
+
+		return new CustomPageDTO<>(PaginationUtils.listAsPage(userResponses, pageable));
 	}
 	
 	public User findUsername(String username) {
@@ -84,22 +99,23 @@ public class UserService {
 	}
 
 	public CustomPageDTO<UserInformationResponseDTO> promote(Integer userId) throws Exception {
-	    User user = userRepository.findById(userId)
-	            .orElseThrow(() -> new NoSuchElementException("User not found"));
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new NoSuchElementException("User not found"));
 
-	    Role adminRole = roleRepository.findByName("ADMIN")
-	            .orElseThrow(() -> new NoSuchElementException("Role ADMIN not found"));
+		Role adminRole = roleRepository.findByName("ADMIN")
+			.orElseThrow(() -> new NoSuchElementException("Role ADMIN not found"));
 
-	    if (user.getRoles().stream().anyMatch(role -> role.getName().equals(adminRole.getName()))) {
-	        throw new Exception("User is already a system administrator");
-	    }
+		if (user.getRoles().stream().anyMatch(role -> role.getName().equals(adminRole.getName()))) {
+			throw new Exception("User is already a system administrator");
+		}
 
-	    user.getRoles().add(adminRole);
-	    User updatedUser = userRepository.save(user);
-	    UserInformationResponseDTO response = new UserInformationResponseDTO(updatedUser);
+		user.getRoles().add(adminRole);
+		User updatedUser = userRepository.save(user);
 
-	    return new CustomPageDTO<UserInformationResponseDTO>(response);
+		UserInformationResponseDTO responseDTO = buildUserWithPerson(updatedUser);
+		return new CustomPageDTO<>(PaginationUtils.singleItemPage(responseDTO));
 	}
+
 
 	public CustomPageDTO<UserInformationResponseDTO> register(RegisterUserRequestDTO registerUserRequestDTO) throws RuntimeException {
 		Set<String> roleNames = registerUserRequestDTO.getRoles();
@@ -137,6 +153,16 @@ public class UserService {
 	
 	public Boolean userExistInDB(String username) {
 		return userRepository.findByUsername(username).isPresent();
+	}
+	
+	private UserInformationResponseDTO buildUserWithPerson(User user) {
+		try {
+			PersonDTO person = personService.getPersonById(user.getPersonId());
+			user.setPerson(person);
+		} catch (Exception e) {
+			System.out.println("Person not foud: " + user.getUsername() + ": " + e.getMessage());
+		}
+		return new UserInformationResponseDTO(user);
 	}
 
 	private User constructUser(RegisterUserRequestDTO registerUserRequestDTO, Set<Role> roles) {

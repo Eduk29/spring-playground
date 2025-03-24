@@ -11,6 +11,7 @@ import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class JwtTokenUtils {
@@ -30,6 +32,12 @@ public class JwtTokenUtils {
 
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
+    
+    private final HttpServletRequest request;
+    
+    public JwtTokenUtils(HttpServletRequest request) {
+        this.request = request;
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -55,6 +63,14 @@ public class JwtTokenUtils {
     public long getExpirationTime() {
         return jwtExpiration;
     }
+    
+    public String getAuthToken() {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return null;
+    }
 
     private String buildToken(
             Map<String, Object> extraClaims,
@@ -77,12 +93,19 @@ public class JwtTokenUtils {
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
-    public boolean isTokenExpired(String token) throws RuntimeException {
-        boolean isExpired = extractExpiration(token).before(new Date());
-        if (isExpired) {
-            throw new RuntimeException("Token expired");
-        }
-        return isExpired;
+    public boolean isTokenExpired(String token) {
+    	try {
+    		Date expiration = extractExpiration(token);
+    		boolean isExpired = expiration.before(new Date());
+
+    		if (isExpired) {
+    			throw new RuntimeException("Token expired");
+    		}
+
+    		return false;
+    	} catch (io.jsonwebtoken.ExpiredJwtException e) {
+    		throw new RuntimeException("Token expired", e);
+    	}
     }
 
     private Date extractExpiration(String token) {
@@ -92,7 +115,7 @@ public class JwtTokenUtils {
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
-                .setSigningKey(getSignInKey()) // Usa a chave no momento da validação
+                .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

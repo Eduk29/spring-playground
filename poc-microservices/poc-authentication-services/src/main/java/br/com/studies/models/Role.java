@@ -33,6 +33,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class Role {
+	
+	public Role(Integer id, String name) {
+	    this.id = id;
+	    this.name = name;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

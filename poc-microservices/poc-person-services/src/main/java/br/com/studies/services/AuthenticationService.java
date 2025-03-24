@@ -49,7 +49,7 @@ public class AuthenticationService {
 			ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.GET, entity, Void.class);
 
 			if (!response.getStatusCode().is2xxSuccessful()) {
-				throw new RuntimeException("Invalid or expired token 123.");
+				throw new RuntimeException("Invalid or expired token.");
 			}
 
 			Claims claims = extractClaims(token);
