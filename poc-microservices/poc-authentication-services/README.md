@@ -76,20 +76,25 @@ If you want to see de API documentantion in Swagger, please start the applicatio
 
 ## API Resources
 
-- User login :white_check_mark:
-- JWT Validation :white_check_mark:
-- JWT Renew :white_check_mark:
-- Logged user information :white_check_mark:
-- User registration :white_check_mark:
-- User list paginated :white_check_mark:
-- User details :white_check_mark:
-- User update :white_check_mark:
-- User delete by Admin profile :white_check_mark:
-- User promote to Admin by Admin profile :white_check_mark:
-- Role list paginated
-- Role details
-- Role creation by Admin profile
-- Role attribuition by Admin profile
+- Authentication
+    - User login :white_check_mark:
+    - JWT Validation :white_check_mark:
+    - JWT Renew :white_check_mark:
+    - Logged user information :white_check_mark:
+
+- User Management
+    - User registration :white_check_mark:
+    - User list paginated :white_check_mark:
+    - User details :white_check_mark:
+    - User update :white_check_mark:
+    - User delete by Admin profile :white_check_mark:
+    - User promote to Admin by Admin profile :white_check_mark:
+
+- Role Management
+    - Role list paginated
+    - Role details
+    - Role creation by Admin profile
+    - Role attribuition by Admin profile
 
 ## Dependecies
 

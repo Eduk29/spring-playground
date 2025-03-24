@@ -71,14 +71,11 @@ If you want to see de API documentantion in Swagger, please start the applicatio
 
 ## API Resources
 
-- List all persons paginated
-- Get person details By:
-    - Id
-    - Name
-    - CPF
-- Register a new person
-- Delete a person by Id
-- Update a person by Id
+- List all persons paginated :white_check_mark:
+- Get person details By id :white_check_mark:
+- Register a new person :white_check_mark:
+- Delete a person by Id :white_check_mark:
+- Update a person by Id :white_check_mark:
 
 ## Dependecies
 
