@@ -7,7 +7,7 @@ services:
     image: mariadb:10.4
     restart: always
     ports:
-      - 3306:3306
+      - 3307:3306
     environment:
       MARIADB_DATABASE: poc_person_db
       MARIADB_ROOT_PASSWORD: root
@@ -22,14 +22,14 @@ services:
       - mariadb
     restart: on-failure
     environment:
-      - DATABASE_HOST=localhost
-      - DATABASE_USER=dev_poc
-      - DATABASE_PASSWORD=w83y4LX6OiUB
+      - DATABASE_HOST=mariadb
+      - DATABASE_USER=dba_user
+      - DATABASE_PASSWORD=nMo9WdE(;kyOVEXY
       - DATABASE_NAME=poc_person_db
       - DATABASE_PORT=3306
     build: .
     ports:
-      - 8080:8080
+      - 8081:8081
     volumes:
       - .m2:/root/.m2
     stdin_open: true

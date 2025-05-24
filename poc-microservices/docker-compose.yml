@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+
+  mariadb-person:
+    container_name: poc-person-database
+    image: mariadb:10.4
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MARIADB_DATABASE: poc_person_db
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_USER: dba_user
+      MARIADB_PASSWORD: nMo9WdE(;kyOVEXY
+    volumes:
+      - mariadb-person-data:/var/lib/mysql
+
+  mariadb-authentication:
+    container_name: poc-authentication-database
+    image: mariadb:10.4
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_DATABASE: poc_authentication_db
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_USER: dba_user
+      MARIADB_PASSWORD: nMo9WdE(;kyOVEXY
+    volumes:
+      - mariadb-authentication-data:/var/lib/mysql
+
+  poc-person-services:
+    container_name: poc-person-services
+    depends_on:
+      - mariadb-person
+    restart: on-failure
+    environment:
+      - DATABASE_HOST=mariadb-person
+      - DATABASE_USER=dba_user
+      - DATABASE_PASSWORD=nMo9WdE(;kyOVEXY
+      - DATABASE_NAME=poc_person_db
+      - DATABASE_PORT=3306
+    build: ./poc-person-services   # ajuste aqui para o caminho correto do Dockerfile
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./poc-person-services/.m2:/root/.m2
+    stdin_open: true
+    tty: true
+
+  poc-authentication-services:
+    container_name: poc-authentication-services
+    depends_on:
+      - mariadb-authentication
+    restart: on-failure
+    environment:
+      - DATABASE_HOST=mariadb-authentication
+      - DATABASE_USER=dba_user
+      - DATABASE_PASSWORD=nMo9WdE(;kyOVEXY
+      - DATABASE_NAME=poc_authentication_db
+      - DATABASE_PORT=3306
+    build: ./poc-authentication-services  # ajuste para seu Dockerfile correto
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./poc-authentication-services/.m2:/root/.m2
+    stdin_open: true
+    tty: true
+
+volumes:
+  mariadb-person-data:
+  mariadb-authentication-data:
