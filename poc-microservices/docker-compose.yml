@@ -41,7 +41,7 @@ services:
       - DATABASE_PASSWORD=nMo9WdE(;kyOVEXY
       - DATABASE_NAME=poc_person_db
       - DATABASE_PORT=3306
-    build: ./poc-person-services   # ajuste aqui para o caminho correto do Dockerfile
+    build: ./poc-person-services
     ports:
       - "8081:8081"
     volumes:
@@ -60,7 +60,7 @@ services:
       - DATABASE_PASSWORD=nMo9WdE(;kyOVEXY
       - DATABASE_NAME=poc_authentication_db
       - DATABASE_PORT=3306
-    build: ./poc-authentication-services  # ajuste para seu Dockerfile correto
+    build: ./poc-authentication-services
     ports:
       - "8080:8080"
     volumes:

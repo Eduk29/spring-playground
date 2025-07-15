@@ -35,7 +35,13 @@ public class Person {
     private String name;
     
     @Column(nullable = false)
+    private String email;
+    
+    @Column(nullable = false)
     private Integer age;
+    
+    @Column(nullable = false)
+    private String birthday;
     
     @Column(nullable = false, unique = true, length = 11)
     private String cpf;
@@ -58,6 +64,8 @@ public class Person {
     public Person(Person person) {
     	this.id = person.id;
     	this.name = person.name;
+    	this.email = person.email;
+    	this.birthday = person.birthday;
     	this.age = person.age;
     	this.cpf = person.cpf;
     	this.userId = person.userId;
